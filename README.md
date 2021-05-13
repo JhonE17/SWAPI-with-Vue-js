@@ -1,4 +1,4 @@
-# swapi-wiht-vue-js
+#SWAPI with Vuejs
 
 ## Project setup
 ```
