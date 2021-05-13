@@ -1,14 +1,16 @@
 <template>
-<div class="my-6">
-  <Planets/>
-</div>
+<!-- Render of component in the view -->
+  <div class="my-6">
+    <Planets />
+  </div>
 </template>
 <script>
-  import Planets from '@/components/Planets.vue';
+// @ is an alias to /src
+import Planets from "@/components/Planets.vue";
 export default {
-  name:"Planet",
-  components:{
-    Planets
-  }
-}
+  name: "Planet",
+  components: {
+    Planets,
+  },
+};
 </script>

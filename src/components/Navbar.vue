@@ -1,10 +1,19 @@
 <template>
   <div class="navbar">
-    <!-- <v-layout row wrap> -->
     <v-toolbar app light color="yellow darken-1" class="hidden-xs-only">
-      <v-toolbar-title>STAR WARS</v-toolbar-title>
+      <v-toolbar-title class="hidden-sm-and-down">STAR WARS</v-toolbar-title>
 
       <v-spacer></v-spacer>
+      <div class="hidden-xs-only">
+        <input
+          v-bind:value="searchText"
+          v-on:input="searchText = $event.target.value"
+          type="text"
+          placeholder="type..."
+        /><v-btn x-small redondeado tile icon @click="(search(), searchText != '' || field.lenght <= 0 ? show = true : show = false)"
+          ><v-icon>mdi-magnify</v-icon></v-btn
+        >
+      </div>
       <v-toolbar-items>
         <v-btn
           v-for="item in nav"
@@ -17,7 +26,16 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-toolbar app light color="yellow darken-1" class="hidden-sm-and-up">
-      <v-toolbar-title>STAR WARS</v-toolbar-title>
+     <div class="hidden-print-only">
+        <input
+          v-bind:value="searchText"
+          v-on:keyup.enter="searchText = $event.target.value"
+          type="text"
+          placeholder="type..."
+        /><v-btn x-small redondeado tile icon @click="(search(), searchText != '' || field.lenght <= 0 ? show = true : show = false)"
+          ><v-icon>mdi-magnify</v-icon></v-btn
+        >
+      </div>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon
         light
@@ -59,18 +77,43 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-    <v-container fluid>
       <v-slide-y-transition mode="out-in"> </v-slide-y-transition>
+    <v-container fluid grid-list-md>
+      <!-- Show Search -->
+      <v-dialog v-model="show" persistent fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition">
+        <v-card>
+          <div v-for="(search, index) in field"
+          :key="index">
+          <v-card-title>{{search.name}}</v-card-title>
+          
+            <v-card-text><a>{{search.url}}</a></v-card-text>
+          
+          <v-divider></v-divider>
+          </div>
+          <v-card-actions >
+            <v-btn @click="show = false">
+              Close
+              </v-btn> 
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- End Show Search -->
     </v-container>
-    <!-- </v-layout> -->
   </div>
 </template>
 <script>
+import axios from "axios";
+import api from "@/utils/api";
 export default {
   name: "Navbar",
   data() {
     return {
+      field: [],
       dialog: false,
+      show:false,
+      searchText: "",
       nav: [
         {
           icon: "person",
@@ -103,5 +146,74 @@ export default {
       ],
     };
   },
+  methods: {
+    getPeople(name) {
+      const params = {
+        search: name,
+      };
+      // this.field = [];
+      axios.get(`${api.url.people}`, { params }).then((res) => {
+        res.data.results.map((characters) => {
+          this.field.push(characters);
+        });
+      });
+    },
+    getPlanets(name) {
+      const params = {
+        search: name,
+      };
+      this.field = [];
+      axios.get(`${api.url.planets}`, { params }).then((res) => {
+        res.data.results.map((characters) => {
+          this.field.push(characters);
+        });
+      });
+    },
+    getStarships(name) {
+      const params = {
+        search: name,
+      };
+      this.field = [];
+      axios.get(`${api.url.starships}`, { params }).then((res) => {
+        res.data.results.map((characters) => {
+          this.field.push(characters);
+        });
+      });
+    },
+    getVehicle(name) {
+      const params = {
+        search: name,
+      };
+      this.field = [];
+      axios.get(`${api.url.vehicles}`, { params }).then((res) => {
+        res.data.results.map((characters) => {
+          this.field.push(characters);
+        });
+      });
+    },
+
+    search() {
+      let textField = this.searchText;
+      if (textField != "") {
+        this.getPeople(textField);
+        this.getPlanets(textField);
+        this.getStarships(textField);
+        this.getVehicle(textField);
+        console.log(this.field);
+      }
+    },
+  },
 };
 </script>
+<style lang="scss" scop>
+input {
+  background-color: #ffff !important;
+  border-block-color: #ffff !important;
+  border-radius: 10px !important;
+  padding: 5px;
+  outline: none !important;
+}
+input:focus {
+  font-size: 300 #0000 solid !important;
+}
+</style>

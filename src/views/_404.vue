@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "PageNotFound",
+  name: "PageNotFound", // Response for page not found
 };
 </script>
 

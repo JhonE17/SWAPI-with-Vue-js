@@ -1,15 +1,11 @@
 <template>
   <div class="row">
+    <!-- Show Vehicles -->
     <v-container>
       <v-col>
         <v-row>
-          <v-col
-            v-for="vehicle in vehicles"
-            :key="vehicle.name"
-            cols="12"
-            sm="6"
-            md="4"
-          >
+          <v-col v-for="vehicle in vehicles" :key="vehicle.name" grid-list-md>
+            >
             <v-hover v-slot="{ hover }">
               <v-card class="mx-auto" max-width="400">
                 <v-img
@@ -19,10 +15,18 @@
                   )}.jpg`"
                   height="300px"
                 >
+                  <!-- Show more info -->
                   <v-expand-transition>
                     <div
                       v-if="hover"
-                      class="card-vehicles transition-fast-in-fast-out black darken-2 v-card--reveal white--text"
+                      class="
+                        card-vehicles
+                        transition-fast-in-fast-out
+                        black
+                        darken-2
+                        v-card--reveal
+                        white--text
+                      "
                       style="height: 100%"
                     >
                       <p>Model: {{ vehicle.model }}</p>
@@ -36,16 +40,18 @@
                       <p>Passengers: {{ vehicle.passengers }}</p>
                     </div>
                   </v-expand-transition>
+                  <!--End show more info -->
                 </v-img>
                 <v-card-title>{{ vehicle.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain >view more</v-btn>
+                  <v-btn color="warning" plain>view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
           </v-col>
         </v-row>
       </v-col>
+      <!-- Pagination  -->
       <div>
         <div class="text-center">
           <v-pagination
@@ -56,19 +62,22 @@
           ></v-pagination>
         </div>
       </div>
+      <!-- End Pagination -->
     </v-container>
+    <!-- End Show Vehicles -->
   </div>
 </template>
 <script>
-import axios from "axios";
-import api from "@/api";
+import axios from "axios"; //Import library for request GET to API
+import api from "@/utils/api"; // Import url set API
+import number from "@/utils/numberPages"; // Import function of number pages
 export default {
   name: "Vehicles",
   data: function () {
     return {
-      page: 1,
-      pages: 4,
-      vehicles: [],
+      page: 1, //Current position page initial
+      pages: 1, //number pages
+      vehicles: [], // Elements stored of the API
     };
   },
   async created() {
@@ -79,18 +88,23 @@ export default {
       const params = {
         page: this.page,
       };
-      axios
+      axios //Request to API with axios
         .get(`${api.url.vehicles}`, { params })
         .then((res) => {
-          this.vehicles = res.data.results;
+          // Promise for extraction data
+          this.vehicles = res.data.results; //Stored data in instances of Vue
+          this.pages = number.numberPages(res.data.count); //Set number of pages for numbers elements in the request
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    /* The value (number) of the page in which its status is captured
+     is received and it is passed as a parameter by calling the callback
+    and it is passed as a parameter to the URL? {Page = n} */
     changePage(value) {
-      this.page = value <= 0 || value > this.pages ? this.page : value; // Rango de paginacion
-      this.getVehicles();
+      this.page = value <= 0 || value > this.pages ? this.page : value; // Rank of pagination
+      this.getVehicles(); // Callback for nextPagination
     },
   },
 };
@@ -113,7 +127,7 @@ export default {
   vertical-align: initial;
   font-size: 13px;
 }
-.card-vehicles{
+.card-vehicles {
   display: inline-grid;
 }
 </style>

@@ -1,3 +1,5 @@
+// Urls Base of API for consumption
+
 const baseUrl = "https://swapi.dev/api/";
 const url = {
   people: `${baseUrl}people/`,

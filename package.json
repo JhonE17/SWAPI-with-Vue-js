@@ -1,7 +1,11 @@
 {
   "name": "swapi-wiht-vue-js",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
+  "author": {
+    "name": "Jhon E. Palacios"
+  },
+  "description": "web aplication for consumption of API swapi (https://swapi.dev/)",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

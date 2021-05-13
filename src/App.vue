@@ -1,50 +1,24 @@
 <template>
+  <!-- Pege all render -->
   <v-app class="main">
+    <!-- Navigator -->
     <v-main>
       <Navbar />
     </v-main>
-
-    <!-- <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <router-link withe to="/">Characters</router-link> |
-      <router-link withe to="/planets">Planets</router-link> |
-      <router-link withe to="/starships">Starships</router-link> |
-      <router-link withe to="/vehicles">Vehicles</router-link> | -->
-    <!-- </v-app-bar> -->
-
+    <!-- End Navigator -->
     <v-main>
+      <!-- Body of Page (All views) -->
       <router-view />
+      <!-- End of Page -->
     </v-main>
-    <!-- <v-sapacer></v-sapacer> -->
+    <!-- Footer information contact -->
     <Footer />
+    <!-- End Footer -->
   </v-app>
 </template>
-
 <script>
-import Navbar from "@/components/Navbar.vue";
-// import Characters from "@/components/Characters.vue";
-import Footer from "@/components/Footer.vue";
+import Navbar from "@/components/Navbar.vue"; // Import navigator for render all views
+import Footer from "@/components/Footer.vue"; // import Footer for render all views
 export default {
   name: "App",
   components: {
@@ -63,12 +37,4 @@ export default {
 .v-application .justify-center {
   justify-content: center !important;
 }
-.boton {
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 2px 2px 0px rgba(0, 0, 0, 0),
-    0px 1px 5px 0px rgba(0, 0, 0, 0);
-  background-color: #3f51b5;
-}
-/* .card-general{
-  display: inline-grid;
-} */
 </style>

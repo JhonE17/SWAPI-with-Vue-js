@@ -1,4 +1,5 @@
 <template>
+  <!-- Render of component in the view -->
   <div class="my-8">
     <Characters />
   </div>

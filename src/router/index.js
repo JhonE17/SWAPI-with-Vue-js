@@ -11,7 +11,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (Characters.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Characters" */ '../views/Characters.vue')
+    component: () => import('../views/Characters.vue')
   },
   {
     path: '/planets',
@@ -19,7 +19,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (Planets.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Planets" */ '../views/Planets.vue')
+    component: () => import('../views/Planets.vue')
   },
   {
     path: '/starships',
@@ -27,7 +27,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (Starships.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Starships" */ '../views/Starships.vue')
+    component: () => import('../views/Starships.vue')
   },
   {
     path: '/vehicles',
@@ -35,7 +35,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (Vehicles.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "Vehicles" */ '../views/Vehicles.vue')
+    component: () => import('../views/Vehicles.vue')
   },
   {
     path: "*",

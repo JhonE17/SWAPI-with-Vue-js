@@ -1,46 +1,37 @@
 <template>
-  <v-footer>
-    <div class="footer">
-      <div class="copyright">
-        DESIGNED AND DEVELOPED BY
-        <a href="">JHON E. PALACIOS</a> &copy;2021
-      </div>
-    </div>
+  <v-footer dark padless>
+    <v-card class="flex" flat tile>
+      <v-card-text class="py-2 white--text  text-center networks">
+        <v-btn v-for="i in info" :key="i.icon" :href="i.url" class="mx-4" dark icon >
+          <v-icon size="24px">
+            {{ i.icon }}
+          </v-icon>
+        </v-btn>
+        {{ new Date().getFullYear() }} &copy;<strong>Jhon E Palacios</strong>
+      </v-card-text>
+    </v-card>
   </v-footer>
 </template>
 
 <script>
 export default {
-  name: "Footer",
+  name: 'Footer',
+
+  data: () => ({
+    info: [
+      { icon: "mdi-github", url: "https://github.com/JhonE17" },
+      { icon: "mdi-twitter", url: "https://twitter.com/_JhonE17" },
+      {
+        icon: "mdi-linkedin",
+        url: "https://www.linkedin.com/in/jhon-e-palacios/",
+      },
+    ],
+  }),
 };
 </script>
-
-<style lang="scss">
-.copyright {
-  font-family: var(--f-secondary);
-  font-size: var(--fs-small);
-  font-weight: var(--regular);
-  color: var(--c-acc-ligther);
-}
-
+<style scoped>
 .networks {
   justify-content: flex-end;
   align-content: center;
-
-  @media only screen and (min-width: 1024px) {
-    justify-content: flex-start;
-  }
-
-  @media only screen and (min-width: 728px) {
-    justify-content: flex-start;
-  }
-}
-
-.icons {
-  color: var(--c-fou-lighter) !important;
-
-  &:hover {
-    color: var(--c-fou-darker) !important;
-  }
 }
 </style>
