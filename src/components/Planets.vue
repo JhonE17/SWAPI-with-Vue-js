@@ -1,38 +1,28 @@
 <template>
   <div class="row">
     <v-container>
-      <v-col cols="12" xs="12" sm="12" xl="12" md="12" lg="12">
+      <v-col>
         <v-row>
           <v-col
             v-for="planet in planets"
             :key="planet.name"
             cols="12"
-            xs="12"
-            sm="12"
-            xl="3"
-            md="12"
-            lg="3"
+            sm="6"
+            md="4"
           >
             <v-hover v-slot="{ hover }">
-              <v-card class="mx-auto" max-width="400">
+              <v-card class="mx-auto" width="350">
                 <v-img
                   v-bind:src="`https://starwars-visualguide.com/assets/img/planets/${planet.url.replace(
                     /[^0-9]/g,
                     ''
                   )}.jpg`"
-                  height="300px"
+                  height="350px"
                 >
                   <v-expand-transition>
                     <div
                       v-if="hover"
-                      class="
-                        d-flex
-                        transition-fast-in-fast-out
-                        black
-                        darken-2
-                        v-card--reveal
-                        white--text
-                      "
+                      class="card-planets transition-fast-in-fast-out black darken-2 v-card--reveal white--text"
                       style="height: 100%"
                     >
                       <p>Population: {{ planet.population }}</p>
@@ -47,20 +37,24 @@
                   </v-expand-transition>
                 </v-img>
                 <v-card-title>{{ planet.name }}</v-card-title>
+                <v-card-actions>
+                  <v-btn color="warning" plain >view more</v-btn>
+                </v-card-actions>
               </v-card>
             </v-hover>
           </v-col>
         </v-row>
       </v-col>
-        <div>
-          <div class="text-center">
-            <v-pagination
-              v-model="page"
-              @input="changePage"
-              :length="pages"
-            ></v-pagination>
-          </div>
+      <div>
+        <div class="text-center">
+          <v-pagination
+            circle
+            v-model="page"
+            @input="changePage"
+            :length="pages"
+          ></v-pagination>
         </div>
+      </div>
     </v-container>
   </div>
 </template>
@@ -122,5 +116,8 @@ export default {
   padding: 0 0.8rem;
   display: table-column;
   vertical-align: initial;
+}
+.card-planets {
+  display: inline-grid;
 }
 </style>

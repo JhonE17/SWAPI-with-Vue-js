@@ -1,15 +1,17 @@
 <template>
-      <Characters/>
+  <div class="my-8">
+    <Characters />
+  </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Characters from '@/components/Characters.vue'
+import Characters from "@/components/Characters.vue";
 
 export default {
-  name: 'Character',
+  name: "Character",
   components: {
-  Characters
-  }
-}
+    Characters,
+  },
+};
 </script>

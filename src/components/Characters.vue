@@ -1,38 +1,34 @@
 <template>
   <div class="row">
     <v-container>
-      <v-col cols="12" xs="12" sm="12" xl="12" md="12" lg="12">
+      <v-col>
         <v-row>
           <v-col
             v-for="personage in characters"
             :key="personage.name"
             cols="12"
-            xs="12"
-            sm="12"
-            xl="3"
-            md="12"
-            lg="3"
+            sm="6"
+            md="4"
           >
             <v-hover v-slot="{ hover }">
-              <v-card class="mx-auto" max-width="355">
+              <v-card class="mx-auto" max-width="300">
                 <v-img
                   v-bind:src="`https://starwars-visualguide.com/assets/img/characters/${personage.url.replace(
                     /[^0-9]/g,
                     ''
                   )}.jpg`"
-                  height="400px"
+                  height="400"
                   onerror="this.v-bin:src=../assets/Tatooine.jpg"
                 >
                   <v-expand-transition>
                     <div
                       v-if="hover"
                       class="
-                        d-flex
+                        card-character
                         transition-fast-in-fast-out
                         black
                         darken-2
                         v-card--reveal
-                       
                         white--text
                       "
                       style="height: 100%"
@@ -47,21 +43,25 @@
                   </v-expand-transition>
                 </v-img>
                 <v-card-title>{{ personage.name }}</v-card-title>
+                <v-card-actions>
+                  <v-btn color="warning" plain>view more</v-btn>
+                </v-card-actions>
               </v-card>
             </v-hover>
           </v-col>
         </v-row>
       </v-col>
-      <br>
-        <div class="center">
-          <div class="text-center">
-            <v-pagination
-              v-model="page"
-              @input="changePage"
-              :length="pages"
-            ></v-pagination>
-          </div>
+      <br />
+      <div class="center">
+        <div class="text-center">
+          <v-pagination
+            circle
+            v-model="page"
+            @input="changePage"
+            :length="pages"
+          ></v-pagination>
         </div>
+      </div>
     </v-container>
   </div>
 </template>
@@ -124,8 +124,12 @@ export default {
 }
 .v-card--reveal p {
   margin: 0;
-  padding: 0 .8rem;
-  display: table-column;
+  padding: 0 0.1rem;
+  display: table-cell;
   vertical-align: initial;
+  font-size: 13px;
+}
+.card-character {
+  display: inline-grid;
 }
 </style>

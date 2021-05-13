@@ -1,12 +1,14 @@
 <template>
-  <Starships/>
+  <div class="my-6">
+    <Starships />
+  </div>
 </template>
 <script>
-  import Starships from '@/components/Starships.vue';
+import Starships from "@/components/Starships.vue";
 export default {
-  name:"Starship",
-  components:{
-    Starships
-  }
-}
+  name: "Starship",
+  components: {
+    Starships,
+  },
+};
 </script>

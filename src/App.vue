@@ -1,6 +1,10 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
+  <v-app class="main">
+    <v-main>
+      <Navbar />
+    </v-main>
+
+    <!-- <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -23,28 +27,29 @@
 
       <v-spacer></v-spacer>
 
-      <router-link class="route" to="/">Home</router-link> |
-      <router-link class="route" to="/characters">Characters</router-link> |
-      <router-link class="route" to="/planets">Planets</router-link> |
-      <router-link class="route" to="/starships">Starships</router-link> |
-      <router-link class="route" to="/vehicles">Vehicles</router-link> |
-    </v-app-bar>
+      <router-link withe to="/">Characters</router-link> |
+      <router-link withe to="/planets">Planets</router-link> |
+      <router-link withe to="/starships">Starships</router-link> |
+      <router-link withe to="/vehicles">Vehicles</router-link> | -->
+    <!-- </v-app-bar> -->
 
     <v-main>
       <router-view />
     </v-main>
+    <!-- <v-sapacer></v-sapacer> -->
     <Footer />
   </v-app>
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
+// import Characters from "@/components/Characters.vue";
 import Footer from "@/components/Footer.vue";
-import Characters from "@/components/Characters.vue";
 export default {
   name: "App",
   components: {
+    Navbar,
     Footer,
-    Characters,
   },
   data: () => ({
     //
@@ -52,7 +57,18 @@ export default {
 };
 </script>
 <style scoped>
-.route {
-  color: aliceblue;
+#app {
+  background-image: url("https://starwarsblog.starwars.com/wp-content/uploads/2020/04/star-wars-backgrounds-25.jpg");
 }
+.v-application .justify-center {
+  justify-content: center !important;
+}
+.boton {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 2px 2px 0px rgba(0, 0, 0, 0),
+    0px 1px 5px 0px rgba(0, 0, 0, 0);
+  background-color: #3f51b5;
+}
+/* .card-general{
+  display: inline-grid;
+} */
 </style>

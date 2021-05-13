@@ -1,38 +1,28 @@
 <template>
   <div class="row">
     <v-container>
-      <v-col cols="12" xs="12" sm="12" xl="12" md="12" lg="12">
+      <v-col>
         <v-row>
           <v-col
             v-for="vehicle in vehicles"
             :key="vehicle.name"
             cols="12"
-            xs="12"
-            sm="12"
-            xl="3"
-            md="12"
-            lg="3"
+            sm="6"
+            md="4"
           >
             <v-hover v-slot="{ hover }">
-              <v-card class="mx-auto" max-width="355">
+              <v-card class="mx-auto" max-width="400">
                 <v-img
                   v-bind:src="`https://starwars-visualguide.com/assets/img/vehicles/${vehicle.url.replace(
                     /[^0-9]/g,
                     ''
                   )}.jpg`"
-                  height="250px"
+                  height="300px"
                 >
                   <v-expand-transition>
                     <div
                       v-if="hover"
-                      class="
-                        d-flex
-                        transition-fast-in-fast-out
-                        black
-                        darken-2
-                        v-card--reveal
-                        white--text
-                      "
+                      class="card-vehicles transition-fast-in-fast-out black darken-2 v-card--reveal white--text"
                       style="height: 100%"
                     >
                       <p>Model: {{ vehicle.model }}</p>
@@ -48,20 +38,24 @@
                   </v-expand-transition>
                 </v-img>
                 <v-card-title>{{ vehicle.name }}</v-card-title>
+                <v-card-actions>
+                  <v-btn color="warning" plain >view more</v-btn>
+                </v-card-actions>
               </v-card>
             </v-hover>
           </v-col>
         </v-row>
       </v-col>
-        <div>
-          <div class="text-center">
-            <v-pagination
-              v-model="page"
-              @input="changePage"
-              :length="pages"
-            ></v-pagination>
-          </div>
+      <div>
+        <div class="text-center">
+          <v-pagination
+            circle
+            v-model="page"
+            @input="changePage"
+            :length="pages"
+          ></v-pagination>
         </div>
+      </div>
     </v-container>
   </div>
 </template>
@@ -101,3 +95,25 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+*.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.8;
+  display: table;
+  position: absolute;
+  width: 100%;
+}
+*.v-card--reveal p {
+  margin: 0;
+  padding: 0 0.1rem;
+  display: table-cell;
+  vertical-align: initial;
+  font-size: 13px;
+}
+.card-vehicles{
+  display: inline-grid;
+}
+</style>
