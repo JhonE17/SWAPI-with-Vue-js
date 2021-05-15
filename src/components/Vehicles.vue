@@ -50,7 +50,7 @@
                 </v-img>
                 <v-card-title>{{ vehicle.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain @click=" detailElement(`${vehicle.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
+                  <v-btn color="warning" plain @click=" detailElement(`${vehicle.url.replace(/^http:\/\//i, 'https://')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -177,7 +177,6 @@ export default {
         // Promise for extraction data
         .then((res) => {
           this.detail.push(res.data); //Stored data in instances of Vue
-          console.log(res.data);
         });
     },
   },    

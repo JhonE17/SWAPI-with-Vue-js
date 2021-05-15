@@ -48,7 +48,7 @@
                   <v-btn
                     color="warning"
                     plain
-                    @click=" detailElement(`${personage.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
+                    @click=" detailElement(`${personage.url.replace(/^http:\/\//i, 'https://')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -187,11 +187,10 @@ export default {
     detailElement(id) {
       this.detail = [];
       axios //Request to API with axios
-        .get(`${api.url.people}${id}`)
+        .get(`${id}`)
         // Promise for extraction data
         .then((res) => {
           this.detail.push(res.data); //Stored data in instances of Vue
-          console.log(res.data);
         });
     },
   },

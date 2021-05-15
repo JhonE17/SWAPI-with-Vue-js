@@ -52,7 +52,7 @@
                 </v-img>
                 <v-card-title>{{ starship.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain @click=" detailElement(`${starship.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
+                  <v-btn color="warning" plain @click=" detailElement(`${starship.url.replace(/^http:\/\//i, 'https://')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -176,11 +176,10 @@ export default {
     detailElement(id) {
       this.detail = [];
       axios //Request to API with axios
-        .get(`${api.url.starships}${id}`)
+        .get(`${id}`)
         // Promise for extraction data
         .then((res) => {
           this.detail.push(res.data); //Stored data in instances of Vue
-          console.log(res.data);
         });
     },
   },
