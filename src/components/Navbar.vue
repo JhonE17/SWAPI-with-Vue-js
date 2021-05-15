@@ -114,7 +114,7 @@ export default {
       dialog: false,
       show:false,
       searchText: "",
-      message: {name:"No se encontraron elementos"},
+      message: {name:"No items found"},
       nav: [
         {
           icon: "person",
