@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <v-toolbar app light color="yellow darken-1" class="hidden-xs-only">
+    <v-app-bar fixed app light color="yellow darken-1" class="hidden-xs-only">
       <v-toolbar-title class="hidden-sm-and-down">STAR WARS</v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -24,8 +24,8 @@
           >{{ item.text }}</v-btn
         >
       </v-toolbar-items>
-    </v-toolbar>
-    <v-toolbar app light color="yellow darken-1" class="hidden-sm-and-up">
+    </v-app-bar>
+    <v-app-bar elevate-on-scroll app light color="yellow darken-1" class="hidden-sm-and-up">
      <div class="hidden-print-only">
         <input
           v-bind:value="searchText"
@@ -76,13 +76,13 @@
           </v-list>
         </v-card>
       </v-dialog>
-    </v-toolbar>
+    </v-app-bar>
       <v-slide-y-transition mode="out-in"> </v-slide-y-transition>
     <v-container fluid grid-list-md>
       <!-- Show Search -->
       <v-dialog v-model="show" persistent fullscreen
       hide-overlay
-      transition="dialog-bottom-transition">
+      transition="dialog-bottom-transition" >
         <v-card>
           <div v-for="(search, index) in field"
           :key="index">
@@ -114,6 +114,7 @@ export default {
       dialog: false,
       show:false,
       searchText: "",
+      message: {name:"No se encontraron elementos"},
       nav: [
         {
           icon: "person",
@@ -151,7 +152,7 @@ export default {
       const params = {
         search: name,
       };
-      // this.field = [];
+      this.field = [];
       axios.get(`${api.url.people}`, { params }).then((res) => {
         res.data.results.map((characters) => {
           this.field.push(characters);
@@ -199,7 +200,9 @@ export default {
         this.getPlanets(textField);
         this.getStarships(textField);
         this.getVehicle(textField);
-        console.log(this.field);
+         if(this.field.length <= 1 ){
+           this.field.push(this.message);
+      }
       }
     },
   },

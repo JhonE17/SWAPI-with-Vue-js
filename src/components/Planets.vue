@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div>
      <!-- Show Planets -->
     <v-container >
       <v-col>
@@ -7,15 +7,15 @@
           <v-col
             v-for="planet in planets"
             :key="planet.name"
-           grid-list-md>
+            cols="12"
+            sm="6"
+            md="4"
           >
             <v-hover v-slot="{ hover }">
               <v-card class="mx-auto" width="350">
                 <v-img
                   v-bind:src="`https://starwars-visualguide.com/assets/img/planets/${planet.url.replace(
-                    /[^0-9]/g,
-                    ''
-                  )}.jpg`"
+                    /[^0-9]/g,'')}.jpg`"
                   height="350px"
                 >
                 <!-- Show more info -->
@@ -23,7 +23,7 @@
                     <div
                       v-if="hover"
                       class="card-planets transition-fast-in-fast-out black darken-2 v-card--reveal white--text"
-                      style="height: 100%"
+                      style="height: 55%"
                     >
                       <p>Population: {{ planet.population }}</p>
                       <p>Rotation period: {{ planet.rotation_period }}</p>
@@ -37,9 +37,10 @@
                   </v-expand-transition>
                   <!--End show more info -->
                 </v-img>
-                <v-card-title>{{ planet.name }}</v-card-title>
+                <v-card-title >{{ planet.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain >view more</v-btn>
+                  <v-btn color="warning" plain @click="
+                      detailElement(`${planet.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -57,6 +58,59 @@
           ></v-pagination>
         </div>
       </div>
+      <!-- Show details -->
+            <v-dialog
+        v-model="showDetail"
+        persistent
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <div align="center" v-for="(info, index) in detail" :key="index">
+            <v-card-title class="headline yellow darken-1">{{
+              info.name
+            }}</v-card-title>
+            <v-avatar color="orange" size="120">
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/planets/${info.url.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="info.url"
+              ></v-img>
+            </v-avatar>
+            <v-card-text>Population: {{ info.population  }}</v-card-text>
+            <v-card-text>Rotation period: {{ info.rotation_period  }}</v-card-text>
+            <v-card-text>Orbital period: {{ info.orbital_period  }}</v-card-text>
+            <v-card-text>Diameter: {{ info.diameter  }}</v-card-text>
+            <v-card-text>Gravity: {{ info.gravity  }}</v-card-text>
+            <v-card-text>Terrain: {{ info.terrain  }}</v-card-text>
+            <v-card-text>Surface water: {{ info.surface_water  }}</v-card-text>
+            <v-card-text>Climate: {{ info.climate  }}</v-card-text>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">RESIDENTS</v-card-title>
+            <br />
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.residents" :key="index" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/residents/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">FILMS</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.films" :key="index.efilms" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/films/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+          </div>
+          <v-card-actions>
+            <v-btn color="warning" text @click="showDetail = !showDetail">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- End show details -->
       <!-- End Pagination -->
     </v-container>
     <!-- End Show Planets -->
@@ -70,15 +124,18 @@ export default {
   name: "Planets",
   data: function () {
     return {
+      showDetail: false, // Show dialog for more datails
       page: 1,//Current position page initial
       pages: 1,//number pages
       planets: [],// Elements stored of the API
+      detail:[] //Elements stored of the API specifique detailed
     };
   },
   created() {
     this.getPlanets();
   },
   methods: {
+    // Get all planets of start wars
     getPlanets() {
       const params = {
         page: this.page,
@@ -100,13 +157,20 @@ export default {
       this.page = value <= 0 || value > this.pages ? this.page : value; // Rank of pagination
       this.getPlanets();// Callback for nextPagination
     },
+    detailElement(id) {
+      this.detail = [];
+      axios //Request to API with axios
+        .get(`${api.url.planets}${id}`)
+        // Promise for extraction data
+        .then((res) => {
+          this.detail.push(res.data); //Stored data in instances of Vue
+          console.log(res.data);
+        });
+    },
   },
 };
 </script>
-<style lang="css">
-/* *p {
- font-size: 200px; 
-} */
+<style lang="css" scope>
 .center {
   align-items: center;
   padding-block-end: initial;
@@ -128,5 +192,9 @@ export default {
 }
 .card-planets {
   display: inline-grid;
+}
+.v-card__subtitle,
+.v-card__text {
+  padding: 1px;
 }
 </style>

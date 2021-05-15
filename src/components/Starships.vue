@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div >
     <!-- Show Starships -->
     <v-container>
       <v-col>
@@ -7,7 +7,9 @@
           <v-col
             v-for="starship in starships"
             :key="starship.name"
-            grid-list-md
+            cols="12"
+            sm="6"
+            md="4"
           >
             >
             <v-hover v-slot="{ hover }">
@@ -31,7 +33,7 @@
                         v-card--reveal
                         white--text
                       "
-                      style="height: 100%"
+                      style="height: 65%"
                     >
                       <p>Model: {{ starship.model }}</p>
                       <p>Manufacturer: {{ starship.manufacturer }}</p>
@@ -41,9 +43,7 @@
                       <p>Hyperdrive: {{ starship.hyperdrive_rating }}</p>
                       <p>MGLT: {{ starship.MGLT }}</p>
                       <p>Length: {{ starship.length }}m</p>
-                      <p>
-                        Cargo capacity: {{ starship.cargo_capacity }}metric tons
-                      </p>
+                      <p>Cargo capacity: {{ starship.cargo_capacity }}metric tons</p>
                       <p>Mimimum crew: {{ starship.crew }}</p>
                       <p>Passengers: {{ starship.passengers }}</p>
                     </div>
@@ -52,7 +52,7 @@
                 </v-img>
                 <v-card-title>{{ starship.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain>view more</v-btn>
+                  <v-btn color="warning" plain @click=" detailElement(`${starship.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -70,6 +70,64 @@
           ></v-pagination>
         </div>
       </div>
+      <!-- Show details -->
+      <v-dialog
+        v-model="showDetail"
+        persistent
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <div align="center" v-for="(info, index) in detail" :key="index">
+            <v-card-title class="headline yellow darken-1">{{
+              info.name
+            }}</v-card-title>
+            <v-avatar color="orange" size="120">
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/starships/${info.url.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="info.url"
+              ></v-img>
+            </v-avatar>
+            <v-card-text>Model: {{ info.model }}</v-card-text>
+            <v-card-text>Manufacturer: {{ info.manufacturer }}</v-card-text>
+            <v-card-text>Class: {{ info.info_class }}</v-card-text>
+            <v-card-text>Cost: {{ info.cost_in_credits }}credits</v-card-text>
+            <v-card-text>Speed: {{ info.max_atmosphering_speed }}Km/h</v-card-text>
+            <v-card-text>Hyperdrive: {{ info.hyperdrive_rating }}</v-card-text>
+            <v-card-text>MGLT: {{ info.MGLT }}</v-card-text>
+            <v-card-text>Length: {{ info.length }}m</v-card-text>
+            <v-card-text>Cargo capacity: {{ info.cargo_capacity }}metric tons</v-card-text>
+            <v-card-text>Mimimum crew: {{ info.crew }}</v-card-text>
+            <v-card-text>Passengers: {{ info.passengers }}</v-card-text>
+            <v-card-text>Consumables: {{ info.consumables }}</v-card-text>
+            <v-card-text>Length: {{ info.length }}</v-card-text>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">PILOTS</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.pilots" :key="index.epilots" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/pilots/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">FILMS</v-card-title>
+            <br />
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.films" :key="index" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/films/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+          </div>
+          <v-card-actions>
+            <v-btn color="warning" text @click="showDetail = !showDetail">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- End show details -->
       <!-- End Pagination -->
     </v-container>
     <!-- End Show Starships -->
@@ -83,9 +141,11 @@ export default {
   name: "Starships",
   data: function () {
     return {
+      showDetail: false, // Show dialog for more datails
       page: 1,//Current position page initial
       pages: 1,//number pages
       starships: [],// Elements stored of the API
+      detail: [], //Elements stored of the API specifique detailed
     };
   },
   created() {
@@ -113,11 +173,21 @@ export default {
       this.page = value <= 0 || value > this.pages ? this.page : value;// Rank of pagination
       this.getStarships();// Callback for nextPagination
     },
+    detailElement(id) {
+      this.detail = [];
+      axios //Request to API with axios
+        .get(`${api.url.starships}${id}`)
+        // Promise for extraction data
+        .then((res) => {
+          this.detail.push(res.data); //Stored data in instances of Vue
+          console.log(res.data);
+        });
+    },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
 *.v-card--reveal {
   align-items: center;
   bottom: 0;
@@ -136,5 +206,9 @@ export default {
 }
 .card-starship {
   display: inline-grid;
+}
+.v-card__subtitle,
+.v-card__text {
+  padding: 1px;
 }
 </style>
