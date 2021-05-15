@@ -1,10 +1,16 @@
 <template>
-  <div class="row">
+  <div>
     <!-- Show Vehicles -->
     <v-container>
       <v-col>
         <v-row>
-          <v-col v-for="vehicle in vehicles" :key="vehicle.name" grid-list-md>
+          <v-col
+            v-for="vehicle in vehicles"
+            :key="vehicle.name"
+            cols="12"
+            sm="6"
+            md="4"
+          >
             >
             <v-hover v-slot="{ hover }">
               <v-card class="mx-auto" max-width="400">
@@ -27,7 +33,7 @@
                         v-card--reveal
                         white--text
                       "
-                      style="height: 100%"
+                      style="height: 60%"
                     >
                       <p>Model: {{ vehicle.model }}</p>
                       <p>Manufacturer: {{ vehicle.manufacturer }}</p>
@@ -44,7 +50,7 @@
                 </v-img>
                 <v-card-title>{{ vehicle.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain>view more</v-btn>
+                  <v-btn color="warning" plain @click=" detailElement(`${vehicle.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -62,6 +68,62 @@
           ></v-pagination>
         </div>
       </div>
+            <!-- Show details -->
+      <v-dialog
+        v-model="showDetail"
+        persistent
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <div align="center" v-for="(info, index) in detail" :key="index">
+            <v-card-title class="headline yellow darken-1">{{
+              info.name
+            }}</v-card-title>
+            <v-avatar color="orange" size="120">
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/vehicles/${info.url.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="info.url"
+              ></v-img>
+            </v-avatar>
+            <v-card-text>Model: {{ info.model }}</v-card-text>
+            <v-card-text>Manufacturer: {{ info.manufacturer }}</v-card-text>
+            <v-card-text>Class: {{ info.vehicle_class }}</v-card-text>
+            <v-card-text>Cost: {{ info.cost_in_credits }}</v-card-text>
+            <v-card-text>Speed: {{ info.max_atmosphering_speed }}Km/h</v-card-text>
+            <v-card-text>Length: {{ info.length }}m</v-card-text>
+            <v-card-text>Cargo capacity: {{ info.cargo_capacity }}</v-card-text>
+            <v-card-text>Minium crew: {{ info.crew }}</v-card-text>
+            <v-card-text>Passengers: {{ info.passengers }}</v-card-text>
+            <v-card-text>Consumables: {{ info.consumables }}</v-card-text>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">PILOTS</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.pilots" :key="index.epilots" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/pilots/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">FILMS</v-card-title>
+            <br />
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.films" :key="index" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/films/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <br>
+            <v-divider></v-divider>
+          </div>
+          <v-card-actions>
+            <v-btn color="warning" text @click="showDetail = !showDetail">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- End show details -->
       <!-- End Pagination -->
     </v-container>
     <!-- End Show Vehicles -->
@@ -75,9 +137,11 @@ export default {
   name: "Vehicles",
   data: function () {
     return {
+      showDetail: false, // Show dialog for more datails
       page: 1, //Current position page initial
       pages: 1, //number pages
       vehicles: [], // Elements stored of the API
+      detail: [], //Elements stored of the API specifique detailed
     };
   },
   async created() {
@@ -106,11 +170,21 @@ export default {
       this.page = value <= 0 || value > this.pages ? this.page : value; // Rank of pagination
       this.getVehicles(); // Callback for nextPagination
     },
-  },
+    detailElement(id) {
+      this.detail = [];
+      axios //Request to API with axios
+        .get(`${api.url.vehicles}${id}`)
+        // Promise for extraction data
+        .then((res) => {
+          this.detail.push(res.data); //Stored data in instances of Vue
+          console.log(res.data);
+        });
+    },
+  },    
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
 *.v-card--reveal {
   align-items: center;
   bottom: 0;
@@ -129,5 +203,9 @@ export default {
 }
 .card-vehicles {
   display: inline-grid;
+}
+.v-card__subtitle,
+.v-card__text {
+  padding: 1px;
 }
 </style>

@@ -2,9 +2,7 @@
   <!-- Pege all render -->
   <v-app class="main">
     <!-- Navigator -->
-    <v-main>
-      <Navbar />
-    </v-main>
+    <Navbar />
     <!-- End Navigator -->
     <v-main>
       <!-- Body of Page (All views) -->
@@ -37,4 +35,5 @@ export default {
 .v-application .justify-center {
   justify-content: center !important;
 }
+
 </style>

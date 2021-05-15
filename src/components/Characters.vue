@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div>
     <!-- Show Characters -->
     <v-container>
       <v-col>
@@ -11,7 +11,7 @@
             sm="6"
             md="4"
           >
-            <v-hover v-slot="{ hover }">
+            <v-hover v-slot:="{ hover }">
               <v-card class="mx-auto" max-width="300">
                 <v-img
                   v-bind:src="`https://starwars-visualguide.com/assets/img/characters/${personage.url.replace(
@@ -19,7 +19,6 @@
                     ''
                   )}.jpg`"
                   height="400"
-                  onerror="this.v-bin:src=../assets/Tatooine.jpg"
                 >
                   <!-- Show more info -->
                   <v-expand-transition>
@@ -31,9 +30,8 @@
                         black
                         darken-2
                         v-card--reveal
-                        white--text
-                      "
-                      style="height: 100%"
+                        white--text"
+                      style="height: 30%"
                     >
                       <p>Heigth: {{ personage.height }}</p>
                       <p>Birth Year: {{ personage.birth_year }}</p>
@@ -43,11 +41,14 @@
                       <p>Gender: {{ personage.gender }}</p>
                     </div>
                   </v-expand-transition>
-                  <!--End show more info -->
                 </v-img>
+                <!--End show more info -->
                 <v-card-title>{{ personage.name }}</v-card-title>
                 <v-card-actions>
-                  <v-btn color="warning" plain to="/details">view more</v-btn>
+                  <v-btn
+                    color="warning"
+                    plain
+                    @click=" detailElement(`${personage.url.replace(/[^0-9]/g, '')}`),(showDetail = true)">view more</v-btn>
                 </v-card-actions>
               </v-card>
             </v-hover>
@@ -67,6 +68,75 @@
           ></v-pagination>
         </div>
       </div>
+      <!-- Show details -->
+      <v-dialog
+        v-model="showDetail"
+        persistent
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <div align="center" v-for="(info, index) in detail" :key="index">
+            <v-card-title class="headline yellow darken-1">{{
+              info.name
+            }}</v-card-title>
+            <v-avatar color="orange" size="120">
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/characters/${info.url.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="info.url"
+              ></v-img>
+            </v-avatar>
+            <v-card-text>Heigth: {{ info.height }}</v-card-text>
+            <v-card-text>Birth Year: {{ info.birth_year }}</v-card-text>
+            <v-card-text>Hair Color: {{ info.hair_color }}</v-card-text>
+            <v-card-text>Eye Color: {{ info.eye_color }}</v-card-text>
+            <v-card-text>Mass: {{ info.mass }}</v-card-text>
+            <v-card-text>Gender: {{ info.gender }}</v-card-text>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">FILMS</v-card-title>
+            <br />
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.films" :key="index" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/films/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">SPECIES</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.species" :key="index.especies" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/species/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">STARSHIPS</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.starships" :key="index.starships" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/starships/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+             <v-divider></v-divider>
+            <v-card-title class="headline yellow darken-1">VEHICLES</v-card-title>
+            <br>
+            <v-avatar color="orange" size="120" v-for="(img, index) in info.vehicles" :key="index.vehicles" >
+              <v-img
+                v-bind:src="`https://starwars-visualguide.com/assets/img/vehicles/${img.replace(/[^0-9]/g,'')}.jpg`"
+                :alt="img"
+              ></v-img>
+            </v-avatar>
+            <br>
+          </div>
+          <v-card-actions>
+            <v-btn color="warning" text @click="showDetail = !showDetail">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- End show details -->
       <!-- End Pagination -->
     </v-container>
   </div>
@@ -76,30 +146,30 @@
 import axios from "axios"; //Import library for request GET to API
 import api from "@/utils/api"; // Import url set API
 import number from "@/utils/numberPages"; // Import function of number pages
-// import details from '@/view/DetailCharacter.vue'
 export default {
   name: "Characters",
-  // components:{details},
   data: function () {
     return {
+      showDetail: false, // Show dialog for more datails
       page: 1, //Current position page initial
       pages: 1, //number pages
       characters: [], // Elements stored of the API
-      dialog: false,
+      detail: [], //Elements stored of the API specifique detailed
     };
   },
   created() {
     this.getPeople();
   },
   methods: {
-    getPeople() {
+    // Get all characteres of start wars
+    getPeople() { 
       const params = {
         page: this.page,
       };
       axios //Request to API with axios
         .get(`${api.url.people}`, { params })
+        // Promise for extraction data
         .then((res) => {
-          // Promise for extraction data
           this.characters = res.data.results; //Stored data in instances of Vue
           this.pages = number.numberPages(res.data.count); //Set number of pages for numbers elements in the request
         })
@@ -113,6 +183,16 @@ export default {
     changePage(value) {
       this.page = value <= 0 || value > this.pages ? this.page : value; // Rank of pagination
       this.getPeople(); // Callback for nextPagination
+    },
+    detailElement(id) {
+      this.detail = [];
+      axios //Request to API with axios
+        .get(`${api.url.people}${id}`)
+        // Promise for extraction data
+        .then((res) => {
+          this.detail.push(res.data); //Stored data in instances of Vue
+          console.log(res.data);
+        });
     },
   },
 };
@@ -142,5 +222,9 @@ export default {
 }
 .card-character {
   display: inline-grid;
+}
+.v-card__subtitle,
+.v-card__text {
+  padding: 1px;
 }
 </style>
