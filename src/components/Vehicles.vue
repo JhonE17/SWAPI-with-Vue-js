@@ -11,7 +11,7 @@
             sm="6"
             md="4"
           >
-            >
+            
             <v-hover v-slot="{ hover }">
               <v-card class="mx-auto" max-width="400">
                 <v-img
